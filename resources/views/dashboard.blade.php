@@ -18,7 +18,7 @@
     <div class="row justify-content-center">
         <div class="col-md-6"> 
     
-    <h1 style ="font-size: 30px;margin: 20px; font-weight: bold; ">add post</h1>
+    <h1 style ="font-size: 30px;margin: 20px; font-weight: bold; ">Add post</h1>
 
     <form action="/store" method="POST" enctype="multipart/form-data">
       @csrf
@@ -45,19 +45,19 @@
     </div>
     </div>
 
-      <div class="">  
-     <h1>blog list</h1>
-        <table style="text-align:center; width:100vw;">
+      <div class="row justify-content-center">  
+     <h1 class="col-md-11"> Post Table </h1>
+        <table class="table table-striped" style="text-align:center; width:100vw;">
           <tr>
-            <th>id</th>
-            <th>author id</th>
-            <th>name</th>
-            <th>type</th>
-            <th>title</th>
-            <th>content</th>
-            <th>image</th>
+            <th>Id</th>
+            <th>Author id</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Title</th>
+            <th>Content</th>
+            <th>Image</th>
             
-            <th>action</th>
+            <th>Action</th>
           </tr>
 
         @foreach ($posts as $post)
@@ -70,8 +70,8 @@
           <td>{{ $post->content }}</td>
           <td>{{ $post->image }}</td>
           <td>
-            <a href="edit_post/{{ $post->id }}">edit</a>
-            <a href="delete_post/{{ $post->id }}">delete</a>
+            <a href="edit_post/{{ $post->id }}"class="badge bg-secondary">edit</a>
+            <a href="delete_post/{{ $post->id }}"class="badge bg-danger">delete</a>
         </td>
         </tr>
         @endforeach

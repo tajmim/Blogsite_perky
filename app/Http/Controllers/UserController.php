@@ -12,47 +12,9 @@ class UserController extends Controller
 {
 
 public function blog(){
-  $posts = Post::all();
+  $posts = Post::with('user')->latest()->paginate(8);
     return view('blog',compact('posts'));
 }
-
-public function edit_post($id) {
-    $post = Post::findOrFail($id);
-    return view('edit_post', compact('post'));
-}
-public function update(Request $request, $id) {
-    $post = Post::findOrFail($id);
-
-    $validatedData = $request->validate([
-        'title' => 'required|string|max:255',
-        'content' => 'required|string',
-        'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-    ]);
-
-    $post->title = $validatedData['title'];
-    $post->content = $validatedData['content'];
-
-    if ($request->file('image')) {
-        // Delete previous image if exists
-        if ($post->image) {
-            Storage::delete('uploads/' . $post->image);
-        }
-        
-        $file = $request->file('image');
-        $uniqueName = uniqid().'.'.$file->getClientOriginalExtension();
-        $path = $file->storeAs('uploads', $uniqueName);
-        $post->image = $uniqueName;
-    }
-
-    $post->save();
-
-    return redirect()->route('dashboard')->with('success', 'Post updated successfully!');
-
-}
-
-
-
-
 
 
 
@@ -67,7 +29,8 @@ public function store(Request $request){
     $validatedData = $request->validate([
         'title' => 'required|string|max:255',
         'content' => 'required|string',
-        'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Adjust the file type and size restrictions as needed
+        
+        
     ]);
 
     // Create a new post instance
@@ -88,7 +51,39 @@ public function store(Request $request){
     $post->save();
     return redirect()->back()->with('success', 'Post created successfully!');
 }
+   
+   public function edit_post($id) {
+    $post = Post::findOrFail($id);
+    return view('edit_post', compact('post'));
+}
+public function update(Request $request, $id) {
+    $post = Post::findOrFail($id);
 
+    $validatedData = $request->validate([
+        'title' => 'required|string|max:255',
+        'content' => 'required|string',
+        
+    ]);
+
+    $post->title = $validatedData['title'];
+    $post->content = $validatedData['content'];
+
+    if ($request->file('image')) {
+        if ($post->image) {
+            Storage::delete('uploads/' . $post->image);
+        }
+        
+        $file = $request->file('image');
+        $uniqueName = uniqid().'.'.$file->getClientOriginalExtension();
+        $path = $file->storeAs('uploads', $uniqueName);
+        $post->image = $uniqueName;
+    }
+
+    $post->save();
+
+    return redirect()->route('dashboard')->with('success', 'Post updated successfully!');
+
+}
 
   public function delete_post($id){
         $post = Post::find($id);
